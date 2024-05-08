@@ -24,8 +24,6 @@ Functions:
 *2.View Booked Tickets*
 *3.Cancel Booking*
 *4.Apply Discounts/Promo Code*
-*5.Generate QR Code*
-*6.Check Ticket Avalibility*
-*7.Search Event*
-*8.Get Event Details*
+*5.Search Event*
+*6.Get Event Details*
 
