@@ -60,6 +60,7 @@ module.exports = {
             }
         }
     },
+    
 
   //3. Cancel Booking - Function to cancel a booked ticket
   cancelBooking(eventId, numTickets) {
@@ -87,6 +88,7 @@ module.exports = {
     console.log(`Cancelled booking for ${numTickets} ticket(s) for event ${eventId}`);
     },
 
+
     //4. Apply Discounts/Promo Code - apply discounts or promo codes to ticket purchases
      applyDiscount(promoCode) {
         // Example: Apply 10% discount for promo code "SAVE10"
@@ -97,6 +99,7 @@ module.exports = {
             console.log("Invalid promo code");
         }
     },
+
 
    //5. Search Event - Function to search for events based on given criteria
    searchEvent(criteria) {
@@ -111,6 +114,7 @@ module.exports = {
         foundEvents.forEach(event => console.log(`Event ID: ${event.id}, Name: ${event.name}, Tickets Available: ${event.ticketsAvailable}`));
     }
     },
+
 
     //6. Get Event Details - Function to retrieve details of a specific event
     getEventDetails(eventId) {
