@@ -19,22 +19,22 @@
 
 1. Book Tickets: To book tickets for an event, use the 'bookTickets' function by providing the event ID and the number of tickets to book
 Example:
-## bookTickets("",);
+### bookTickets("",);
 
 2. View Booked Tickets:To view booked tickets, use the 'viewBookedTickets' function.
 Example:
-## viewBookedTickets();
+### viewBookedTickets();
 
 3. Cancel Booking:To cancel a booked ticket, use the 'cancelBooking' function by providing the event ID and the number of tickets to cancel.Example:
-## cancelBooking("", );
+### cancelBooking("", );
 
 4. Apply Discounts/Promo Code:To apply discounts or promo codes, use the 'applyDiscount' function by providing the promo code.
 Example:
-## applyDiscount("");
+### applyDiscount("");
 
 5. Search Event:To search for events based on specific criteria, use the 'searchEvent' function by providing the search criteria.
 Example:
-## searchEvent("");
+### searchEvent("");
 
 
 
