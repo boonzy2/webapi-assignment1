@@ -113,18 +113,5 @@ module.exports = {
         console.log("Found events:");
         foundEvents.forEach(event => console.log(`Event ID: ${event.id}, Name: ${event.name}, Tickets Available: ${event.ticketsAvailable}`));
     }
-    },
-
-
-    //6. Get Event Details - Function to retrieve details of a specific event
-    getEventDetails(eventId) {
-        // Logic to retrieve and display details of the specified event
-        if (eventsData[eventId]) {
-            console.log(`Event Details for Event ID ${eventId}:`);
-            console.log(`Name: ${eventsData[eventId].name}`);
-            console.log(`Tickets Available: ${eventsData[eventId].ticketsAvailable}`);
-        } else {
-            console.log(`Event with ID ${eventId} not found.`);
-        }
     }
 };

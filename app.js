@@ -18,6 +18,3 @@ ticketmaster.applyDiscount("SAVE10");
 
 //5
 ticketmaster.searchEvent("C"); 
-
-//6
-ticketmaster.getEventDetails("E1"); 
