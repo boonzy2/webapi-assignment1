@@ -5,9 +5,13 @@
 ## Features
 
 1.*Book Tickets*: Allows users to book tickets for events based on availability.
+
 2.*View Booked Tickets*: Enables users to view previously booked tickets.
+
 3.*Cancel Booking*: Provides functionality to cancel a booked ticket.
+
 4.*Apply Discounts/Promo Code*: Allows users to apply discounts or promo codes to ticket purchases.
+
 5.*Search Event*: Enables users to search for events based on specific criteria.
 
 ## Usage
