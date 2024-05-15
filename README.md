@@ -17,6 +17,7 @@
 ## Usage
 ### These are the lines you need to call the functions and use the ticket booking system
 
+```
 1. Book Tickets: To book tickets for an event, use the 'bookTickets' function by providing the event ID and the number of tickets to book
 Example:
 ### bookTickets("",);
@@ -35,6 +36,6 @@ Example:
 5. Search Event:To search for events based on specific criteria, use the 'searchEvent' function by providing the search criteria.
 Example:
 ### searchEvent("");
-
+```
 
 

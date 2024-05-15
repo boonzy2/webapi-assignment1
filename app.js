@@ -1,20 +1,22 @@
 let ticketmaster = require("./Brandon_WAD.js");
 
-console.log("Beginning of Boonzy Ticket Master");
+// Book Tickets
+let bookingDetails = ticketmaster.bookTickets("E1", 2); // Book 2 tickets for event E1
+if (bookingDetails.success) {
+    console.log("Tickets booked successfully. Booking ID:", bookingDetails.bookingId);
+} else {
+    console.log("Failed to book tickets:", bookingDetails.message);
+}
 
-// Beginning of calling of functions
-// Call the function to book tickets - 1
-let bookingResult = ticketmaster.bookTickets("E1", 4);
-console.log(bookingResult); // Display the result of booking
+// Cancel Booking using the returned booking ID
+ticketmaster.cancelBooking(bookingDetails.bookingId);
 
-//2
-ticketmaster.viewBookedTickets(); 
 
 //3
-ticketmaster.cancelBooking("E2", 4);
+// ticketmaster.viewBookedTickets(); 
 
 //4
-ticketmaster.applyDiscount("SAVE10"); 
+// ticketmaster.applyDiscount("SAVE10"); 
 
 //5
-ticketmaster.searchEvent("C"); 
+// ticketmaster.searchEvent("C"); 

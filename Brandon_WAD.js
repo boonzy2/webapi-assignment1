@@ -4,11 +4,13 @@ let eventsData = {
     "E2": { name: "Sports Game", ticketsAvailable: 200 }
 };
 
-let bookingsData = {};
+let bookingsData = {}; // Object to store booking details
+let bookedTickets = []; // Array to store booked ticket IDs
 
 module.exports = {
 
     //1. Book Tickets - Function to book tickets for an event
+     // Function to book tickets for an event
      bookTickets(eventId, numTickets) {
         // Check if the event exists
         if (eventsData[eventId]) {
@@ -16,19 +18,19 @@ module.exports = {
             if (eventsData[eventId].ticketsAvailable >= numTickets) {
                 // Update tickets available for the event
                 eventsData[eventId].ticketsAvailable -= numTickets;
-                
-                // Generate booking ID (you might have a more robust way to generate IDs)
+    
+                // Generate booking ID
                 let bookingId = `B${Math.floor(Math.random() * 10000)}`;
-
+    
                 // Store booking details
                 bookingsData[bookingId] = {
                     eventId: eventId,
                     numTickets: numTickets
                 };
-
-                // Return booking details
+    
+                // Return booking details along with booking ID
                 return {
-                    bookingId: bookingId,
+                    bookingId: bookingId, // Return the generated booking ID
                     event: eventsData[eventId],
                     ticketsBooked: numTickets,
                     success: true // Indicate success of booking
@@ -46,9 +48,38 @@ module.exports = {
             };
         }
     },
+    
+        
+    
+
+  //2. Cancel Booking - Function to cancel a booked ticket
+    // Function to cancel a booked ticket
+cancelBooking(bookingId) {
+    // Check if the booking exists
+    if (bookingsData[bookingId]) {
+        let eventId = bookingsData[bookingId].eventId;
+        let numTickets = bookingsData[bookingId].numTickets;
+
+        // Increment tickets available for the event
+        eventsData[eventId].ticketsAvailable += numTickets;
+
+        // Remove booking from bookingsData
+        delete bookingsData[bookingId];
+
+        // Remove booking ID from bookedTickets array
+        let index = bookedTickets.indexOf(bookingId);
+        if (index !== -1) {
+            bookedTickets.splice(index, 1);
+        }
+
+        console.log(`Cancelled booking ${bookingId} for ${numTickets} ticket(s) for event ${eventId}`);
+    } else {
+        console.log("Booking not found.");
+    }
+},
 
 
-    //2. View Booked tickets - Check if there are booked tickets
+    //3. View Booked tickets - Check if there are booked tickets
     viewBookedTickets() {
         if (Object.keys(bookingsData).length === 0) {
             console.log("No tickets have been booked yet.");
@@ -60,33 +91,7 @@ module.exports = {
             }
         }
     },
-    
 
-  //3. Cancel Booking - Function to cancel a booked ticket
-  cancelBooking(eventId, numTickets) {
-    // Check if there are bookings for the event
-    let bookings = Object.entries(bookingsData).filter(([_, booking]) => booking.eventId === eventId);
-    if (bookings.length === 0) {
-        console.log("No bookings found for this event.");
-        return;
-    }
-
-    // Find a booking with matching number of tickets
-    let bookingToRemove = bookings.find(([_, booking]) => booking.numTickets === numTickets);
-
-    if (!bookingToRemove) {
-        console.log(`No booking found with ${numTickets} tickets for event ${eventId}.`);
-        return;
-    }
-
-    // Increment tickets available for the event
-    eventsData[eventId].ticketsAvailable += numTickets;
-
-    // Remove booking from bookingsData
-    delete bookingsData[bookingToRemove[0]];
-
-    console.log(`Cancelled booking for ${numTickets} ticket(s) for event ${eventId}`);
-    },
 
 
     //4. Apply Discounts/Promo Code - apply discounts or promo codes to ticket purchases
@@ -114,4 +119,6 @@ module.exports = {
         foundEvents.forEach(event => console.log(`Event ID: ${event.id}, Name: ${event.name}, Tickets Available: ${event.ticketsAvailable}`));
     }
     }
+
+    //6 Update event particulars
 };
