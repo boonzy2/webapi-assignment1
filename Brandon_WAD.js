@@ -70,7 +70,11 @@ module.exports = {
                     // Assign seat numbers
                     let seats = this.assignSeats(eventId, ticketType, numTickets);
     
-                    let bookingId = `B${Math.floor(Math.random() * 10000)}`;
+                    // Increment the last used booking ID
+                    this.lastBookingId = this.lastBookingId ? this.lastBookingId + 1 : 1;
+    
+                    // Generate the booking ID
+                    let bookingId = `B${this.lastBookingId}`;
     
                     this.bookingsData[bookingId] = {
                         eventId: eventId,
@@ -112,7 +116,7 @@ module.exports = {
         }
     },
     
-    
+
     // Cancel Booking - Function to cancel a booked ticket
     cancelBooking(bookingId) {
         if (this.bookingsData[bookingId]) {
@@ -155,7 +159,7 @@ module.exports = {
                 success: false
             };
         }
-
+    
         let eventId = `E${Object.keys(this.eventsData).length + 1}`; // Generate unique event ID
         this.eventsData[eventId] = eventData;
         console.log(`Event ${eventId} created successfully.`);
@@ -165,6 +169,7 @@ module.exports = {
         };
     },
 
+    // Search Event - Function to search for events
     searchEvent(criteria) {
         console.log(`Searching for events based on: ${criteria}`);
         let foundEvents = Object.values(this.eventsData).filter(event => event.name.toLowerCase().includes(criteria.toLowerCase()));
