@@ -38,4 +38,17 @@ Example:
 ### searchEvent("");
 ```
 
+# Ticket Booking System
+
+This is a simple ticket booking system implemented in JavaScript. It allows users to book tickets for various events, cancel bookings, view booked tickets, create new events, and search for existing events based on criteria.
+
+## How to Use
+
+### Setting User Balance
+Before booking tickets, you need to set the user's balance using the `setBalance(amount)` function.
+
+```javascript
+ticketmaster.setBalance(1000);
+
+
 

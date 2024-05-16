@@ -15,7 +15,15 @@ module.exports = {
             ticketTypes: {
                 "Standard": { price: 30, ticketsAvailable: 200, seats: [] }
             }
-        }
+        },
+        "E3": { 
+            name: "Kids Concert", 
+            description: "A thrilling music concert featuring top kid artists.",
+            ticketTypes: {
+                "General": { price: 50, ticketsAvailable: 120, seats: [] },
+                "VIP": { price: 100, ticketsAvailable: 20, seats: [] }
+            }
+        },
     },
     bookingsData: {}, // Object to store booking details
 
@@ -26,96 +34,85 @@ module.exports = {
     setBalance(amount) {
         this.balance = amount;
     },
-
     assignSeats(eventId, ticketType, numTickets) {
         let seats = [];
         let availableSeats = this.eventsData[eventId].ticketTypes[ticketType].seats;
         
         for (let i = 0; i < numTickets; i++) {
-            let assignedSeat = null;
             if (availableSeats.length > 0) {
                 let seatIndex = Math.floor(Math.random() * availableSeats.length);
-                assignedSeat = availableSeats.splice(seatIndex, 1)[0];
+                let assignedSeat = availableSeats.splice(seatIndex, 1)[0];
+                seats.push(assignedSeat);
             }
-            seats.push(assignedSeat);
         }
         return seats;
     },
+
+    // Book Tickets - Function to book tickets for an event
+    bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
+        if (this.eventsData[eventId]) {
+            if (this.eventsData[eventId].ticketTypes[ticketType] && this.eventsData[eventId].ticketTypes[ticketType].ticketsAvailable >= numTickets) {
+                let ticketPrice = this.eventsData[eventId].ticketTypes[ticketType].price;
+                let totalPrice = numTickets * ticketPrice;
     
-
-
+                // Apply discount if promo code is provided
+                if (promoCode === "SAVE10") {
+                    totalPrice *= 0.9; // Apply 10% discount
+                }
     
-
-// Book Tickets - Function to book tickets for an event
-bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
-    if (this.eventsData[eventId]) {
-        if (this.eventsData[eventId].ticketTypes[ticketType] && this.eventsData[eventId].ticketTypes[ticketType].ticketsAvailable >= numTickets) {
-            let ticketPrice = this.eventsData[eventId].ticketTypes[ticketType].price;
-            let totalPrice = numTickets * ticketPrice;
-
-            // Apply discount if promo code is provided
-            if (promoCode === "SAVE10") {
-                totalPrice *= 0.9; // Apply 10% discount
-            }
-
-            // Check if balance is sufficient
-            if (this.balance >= totalPrice) {
-                // Deduct amount from balance
-                this.balance -= totalPrice;
-
-                this.eventsData[eventId].ticketTypes[ticketType].ticketsAvailable -= numTickets;
-
-                // Assign seat numbers
-                let seats = this.assignSeats(eventId, ticketType, numTickets);
-
-                let bookingId = `B${Math.floor(Math.random() * 10000)}`;
-
-                this.bookingsData[bookingId] = {
-                    eventId: eventId,
-                    numTickets: numTickets,
-                    ticketType: ticketType,
-                    totalPrice: totalPrice, // Store total price in booking details
-                    seats: seats
-                };
-
-                // Convert seat numbers array to a string for display
-                let assignedSeatsStr = seats.map(seat => seat !== null ? seat : "N/A").join(", ");
-
-                console.log(`Successfully booked ${numTickets} ticket(s) for event ${this.eventsData[eventId].name}. Assigned seat(s): ${assignedSeatsStr}. Remaining balance: ${this.balance}`);
-
-                return {
-                    bookingId: bookingId,
-                    event: this.eventsData[eventId],
-                    ticketsBooked: numTickets,
-                    totalPrice: totalPrice,
-                    remainingBalance: this.balance,
-                    seats: seats,
-                    success: true
-                };
+                // Check if balance is sufficient
+                if (this.balance >= totalPrice) {
+                    // Deduct amount from balance
+                    this.balance -= totalPrice;
+    
+                    this.eventsData[eventId].ticketTypes[ticketType].ticketsAvailable -= numTickets;
+    
+                    // Assign seat numbers
+                    let seats = this.assignSeats(eventId, ticketType, numTickets);
+    
+                    let bookingId = `B${Math.floor(Math.random() * 10000)}`;
+    
+                    this.bookingsData[bookingId] = {
+                        eventId: eventId,
+                        numTickets: numTickets,
+                        ticketType: ticketType,
+                        totalPrice: totalPrice,
+                        seats: seats // Assign seat numbers
+                    };
+    
+                    console.log(`Successfully booked ${numTickets} ticket(s) for event ${this.eventsData[eventId].name}. Remaining balance: ${this.balance}`);
+                    console.log(`Assigned seat(s): ${seats.join(', ')}`); // Display assigned seat numbers separately
+    
+                    return {
+                        bookingId: bookingId,
+                        event: this.eventsData[eventId],
+                        ticketsBooked: numTickets,
+                        totalPrice: totalPrice,
+                        remainingBalance: this.balance,
+                        seats: seats,
+                        success: true
+                    };
+                } else {
+                    return {
+                        message: "Not enough money in the balance.",
+                        success: false
+                    };
+                }
             } else {
                 return {
-                    message: "Not enough money in the balance.",
+                    message: "Invalid ticket type or not enough tickets available for this type.",
                     success: false
                 };
             }
         } else {
             return {
-                message: "Invalid ticket type or not enough tickets available for this type.",
+                message: "Event not found.",
                 success: false
             };
         }
-    } else {
-        return {
-            message: "Event not found.",
-            success: false
-        };
-    }
-},
-
-
-
-
-
+    },
+    
+    
     // Cancel Booking - Function to cancel a booked ticket
     cancelBooking(bookingId) {
         if (this.bookingsData[bookingId]) {
@@ -136,8 +133,6 @@ bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
         }
     },
 
-
-
     // View Booked tickets - Check if there are booked tickets
     viewBookedTickets() {
         if (Object.keys(this.bookingsData).length === 0) {
@@ -145,7 +140,9 @@ bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
         } else {
             console.log("Viewing booked tickets:");
             for (let bookingId in this.bookingsData) {
-                console.log(`Booking ID: ${bookingId}, Event ID: ${this.bookingsData[bookingId].eventId}, Number of Tickets: ${this.bookingsData[bookingId].numTickets}`);
+                let booking = this.bookingsData[bookingId];
+                let eventName = this.eventsData[booking.eventId].name;
+                console.log(`Booking ID: ${bookingId}, Event Name: ${eventName}, Number of Tickets: ${booking.numTickets}, Assigned Seats: ${booking.seats.join(', ')}`);
             }
         }
     },
@@ -168,7 +165,6 @@ bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
         };
     },
 
-    // Search Event - Function to search for events based on given criteria
     searchEvent(criteria) {
         console.log(`Searching for events based on: ${criteria}`);
         let foundEvents = Object.values(this.eventsData).filter(event => event.name.toLowerCase().includes(criteria.toLowerCase()));
@@ -176,7 +172,13 @@ bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
             console.log("No events found matching the criteria.");
         } else {
             console.log("Found events:");
-            foundEvents.forEach(event => console.log(`Event ID: ${event.id}, Name: ${event.name}, Description: ${event.description}, Tickets Available: ${event.ticketsAvailable}`));
+            foundEvents.forEach(event => {
+                console.log(`Event ID: ${event.id}, Name: ${event.name}, Description: ${event.description}`);
+                console.log("Ticket Types:");
+                Object.entries(event.ticketTypes).forEach(([type, details]) => {
+                    console.log(`- Type: ${type}, Price: ${details.price}, Tickets Available: ${details.ticketsAvailable}`);
+                });
+            });
         }
     }
 };
