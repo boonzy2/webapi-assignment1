@@ -23,7 +23,12 @@ Before booking tickets, you need to set the user's balance using the `setBalance
 ```javascript
 e.g.  ticketmaster.setBalance(1000);
 ```
-
+### Initializing of Events and Seats
+Before booking tickets, you need to run this dunction to initialize seats and event
+```
+// Call initializeSeatsForEvents function
+ticketmaster.initializeSeatsForEvents();
+```
 
 ## Features
 
@@ -41,15 +46,20 @@ e.g.  ticketmaster.setBalance(1000);
 ### These are the lines you need to call the functions and use the ticket booking system
 
 ```
-// Set user balance
-ticketmaster.setBalance(1000);
 
 // Book tickets
 // Note: For book tickets you can choose the event id, number of pax, ticket type, and apply promo code for discounts
-let bookingDetails = ticketmaster.bookTickets("E1", 2, "VIP", "SAVE10");
+let bookingDetails = ticketmaster.bookTickets("E1", 2, "VIP", null); //you can use promocode SAVE10 for 10% discount
+if (bookingDetails.success) {
+    console.log("Tickets booked successfully. Booking ID:", bookingDetails.bookingId);
+    console.log("Total Price:", bookingDetails.totalPrice); // Display total price after discount
+} else {
+    console.log("Failed to book tickets:", bookingDetails.message);
+}
 
 // Cancel a booking
-ticketmaster.cancelBooking("B1234");
+// Note: Reference the booking ID from after successfully booked tickets
+ticketmaster.cancelBooking(bookingID);
 
 // View booked tickets
 ticketmaster.viewBookedTickets();
@@ -68,7 +78,7 @@ let newEventData = {
 ticketmaster.createEvent(newEventData);
 
 // Search for events
-ticketmaster.searchEvent("Concert");
+ticketmaster.searchEvent("name"); //search for name of event can be like c in concert or concert, replace the name with what u desire
 
 ```
 

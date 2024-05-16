@@ -4,11 +4,12 @@ const ticketmaster = require("./Brandon_WAD.js");
 ticketmaster.setBalance(1000);
 
 console.log("====================");
+// Call initializeSeatsForEvents function
+ticketmaster.initializeSeatsForEvents();
 
 // Book Tickets
-let bookingDetails = ticketmaster.bookTickets("E1", 2, "VIP", "SAVE10"); // Book 2 VIP tickets for event E1 with promo code SAVE10
+let bookingDetails = ticketmaster.bookTickets("E3", 2, "VIP", "SAVE10"); // Book 2 VIP tickets for event E1 with promo code SAVE10
 if (bookingDetails.success) {
-    ticketmaster.assignSeats("E1", "VIP", 2);
     console.log("Tickets booked successfully. Booking ID:", bookingDetails.bookingId);
     console.log("Total Price:", bookingDetails.totalPrice); // Display total price after discount
 } else {

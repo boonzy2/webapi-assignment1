@@ -1,30 +1,43 @@
 module.exports = {
-    // Data stores for events and bookings
-    eventsData: {
-        "E1": { 
-            name: "Concert", 
-            description: "A thrilling music concert featuring top artists.",
-            ticketTypes: {
-                "General": { price: 50, ticketsAvailable: 100, seats: [] },
-                "VIP": { price: 100, ticketsAvailable: 50, seats: [] }
-            }
-        },
-        "E2": { 
-            name: "Sports Game", 
-            description: "Exciting sports game with teams competing for victory.",
-            ticketTypes: {
-                "Standard": { price: 30, ticketsAvailable: 200, seats: [] }
-            }
-        },
-        "E3": { 
-            name: "Kids Concert", 
-            description: "A thrilling music concert featuring top kid artists.",
-            ticketTypes: {
-                "General": { price: 50, ticketsAvailable: 120, seats: [] },
-                "VIP": { price: 100, ticketsAvailable: 20, seats: [] }
-            }
-        },
+  // Data stores for events and bookings
+eventsData: {
+    "E1": { 
+        name: "Concert", 
+        description: "A thrilling music concert featuring top artists.",
+        ticketTypes: {
+            "General": { price: 50, ticketsAvailable: 100, seats: [] },
+            "VIP": { price: 100, ticketsAvailable: 50, seats: [] }
+        }
     },
+    "E2": { 
+        name: "Sports Game", 
+        description: "Exciting sports game with teams competing for victory.",
+        ticketTypes: {
+            "Standard": { price: 30, ticketsAvailable: 200, seats: [] }
+        }
+    },
+    "E3": { 
+        name: "Kids Concert", 
+        description: "A thrilling music concert featuring top kid artists.",
+        ticketTypes: {
+            "General": { price: 50, ticketsAvailable: 120, seats: [] },
+            "VIP": { price: 100, ticketsAvailable: 20, seats: [] }
+        }
+    },
+},
+
+
+  // Initialize available seats for each event
+  initializeSeatsForEvents() {
+    Object.values(this.eventsData).forEach(event => {
+        Object.values(event.ticketTypes).forEach(ticketType => {
+            ticketType.seats = this.initializeSeats(ticketType.ticketsAvailable);
+        });
+    });
+},
+
+
+
     bookingsData: {}, // Object to store booking details
 
     // User balance
@@ -34,21 +47,46 @@ module.exports = {
     setBalance(amount) {
         this.balance = amount;
     },
+
+    
     assignSeats(eventId, ticketType, numTickets) {
         let seats = [];
-        let availableSeats = this.eventsData[eventId].ticketTypes[ticketType].seats;
+        let availableSeats = this.eventsData[eventId].ticketTypes[ticketType].seats; // Get available seats directly
         
-        for (let i = 0; i < numTickets; i++) {
-            if (availableSeats.length > 0) {
-                let seatIndex = Math.floor(Math.random() * availableSeats.length);
-                let assignedSeat = availableSeats.splice(seatIndex, 1)[0];
-                seats.push(assignedSeat);
+        console.log("Available seats before assignment:", availableSeats);
+    
+        // Check if there are available seats
+        if (availableSeats.length > 0) {
+            // Loop to assign seats for the requested number of tickets
+            for (let i = 0; i < numTickets; i++) {
+                // Find the index of an available seat
+                let seatIndex = availableSeats.findIndex(seat => seat !== null);
+                
+                // Check if there's an available seat
+                if (seatIndex !== -1) {
+                    seats.push(availableSeats[seatIndex]); // Push the assigned seat into the seats array
+                    availableSeats[seatIndex] = null; // Mark the seat as assigned
+                } else {
+                    console.log("Not enough available seats.");
+                    break; // Exit the loop if there are no more available seats
+                }
             }
+        } else {
+            console.log("No available seats.");
         }
-        return seats;
+    
+        console.log("Assigned seats:", seats);
+    
+        return seats; // Return the assigned seats
     },
+    
+    
+    
+    
+    
+    
+    
 
-    // Book Tickets - Function to book tickets for an event
     bookTickets(eventId, numTickets, ticketType = "General", promoCode = null) {
         if (this.eventsData[eventId]) {
             if (this.eventsData[eventId].ticketTypes[ticketType] && this.eventsData[eventId].ticketTypes[ticketType].ticketsAvailable >= numTickets) {
@@ -91,6 +129,7 @@ module.exports = {
                         bookingId: bookingId,
                         event: this.eventsData[eventId],
                         ticketsBooked: numTickets,
+                        ticketPrice: ticketPrice,
                         totalPrice: totalPrice,
                         remainingBalance: this.balance,
                         seats: seats,
@@ -115,6 +154,7 @@ module.exports = {
             };
         }
     },
+    
     
 
     // Cancel Booking - Function to cancel a booked ticket
@@ -162,12 +202,26 @@ module.exports = {
     
         let eventId = `E${Object.keys(this.eventsData).length + 1}`; // Generate unique event ID
         this.eventsData[eventId] = eventData;
-        console.log(`Event ${eventId} created successfully.`);
+    
+        // Initialize available seats for each ticket type
+        Object.values(this.eventsData[eventId].ticketTypes).forEach(ticketType => {
+            ticketType.seats = this.initializeSeats(ticketType.ticketsAvailable);
+        });
+    
+        console.log(`Event ${eventId}, ${eventData.name} created successfully.`);
         return {
             eventId: eventId,
             success: true
         };
     },
+    initializeSeats(numSeats) {
+        let seats = [];
+        for (let i = 1; i <= numSeats; i++) {
+            seats.push(`Seat ${i}`);
+        }
+        return seats;
+    },
+    
 
     // Search Event - Function to search for events
     searchEvent(criteria) {
